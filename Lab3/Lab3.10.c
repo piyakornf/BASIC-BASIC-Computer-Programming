@@ -1,62 +1,52 @@
 #include <stdio.h>
 
-struct PurchasedItem {
-    char productName[50];
-    float itemUnitPrice;
-    int purchasedQuantity;
-};
+#define VAT_RATE 0.07   
+
+
 
 int main() {
+    int N, i;
+    float subtotal = 0.0;
+    float totalVAT = 0.0;
+    float grandTotal = 0.0;
     
-    int numberOfItems, loopIndex;
+    struct Item {
+        char name[50];
+        float unitPrice;
+        int quantity;
+    };
 
-    
-    float lineItemCost;
-    float runningSubtotal = 0.0;
-    float calculatedTotalVAT = 0.0;
-    float finalGrandTotal = 0.0;
-
-    
-    const float VAT_PERCENTAGE_RATE = 0.07;
-    
-   
-    if (scanf("%d", &numberOfItems) != 1) {
-        return 1; 
+    if (scanf("%d", &N) != 1 || N <= 0) {
+        return 1;
     }
 
-    
-    struct PurchasedItem allItemsData[numberOfItems];
+    struct Item items[N];
 
-    printf("---RECEIPT ---\n");
-    
-    
-    for (loopIndex = 0; loopIndex < numberOfItems; loopIndex++) {
-        
-        if (scanf("%s %f %d", allItemsData[loopIndex].productName, 
-                              &allItemsData[loopIndex].itemUnitPrice, 
-                              &allItemsData[loopIndex].purchasedQuantity) != 3) {
-            return 1; 
+   
+    for (i = 0; i < N; i++) {
+        if (scanf("%s %f %d", items[i].name, &items[i].unitPrice, &items[i].quantity) != 3) {
+            return 1;
         }
-
-        
-        lineItemCost = allItemsData[loopIndex].itemUnitPrice * allItemsData[loopIndex].purchasedQuantity;
-
-        
-        printf("%s x %d = %.2f\n", allItemsData[loopIndex].productName, allItemsData[loopIndex].purchasedQuantity, lineItemCost);
-        
-        
-        runningSubtotal += lineItemCost;
     }
 
-   
-    calculatedTotalVAT = runningSubtotal * VAT_PERCENTAGE_RATE;
-    finalGrandTotal = runningSubtotal + calculatedTotalVAT;
+    printf("\n--- RECEIPT ---\n");
 
+    
+    for (i = 0; i < N; i++) {
+        float itemCost = items[i].unitPrice * items[i].quantity;
+        subtotal += itemCost;
 
-    printf("------------\n");
-    printf("Subtotal: %.2f\n", runningSubtotal);
-    printf("VAT (7%%): %.2f\n", calculatedTotalVAT);
-    printf("Grand Total: %.2f\n", finalGrandTotal);
+        printf("%s x %d = %.2f\n", items[i].name, items[i].quantity, itemCost);
+    }
+
+    
+    totalVAT = subtotal * VAT_RATE;
+    grandTotal = subtotal + totalVAT;
+
+    printf("----------------------\n");
+    printf("Subtotal: %.2f\n", subtotal);
+    printf("VAT (7%%): %.2f\n", totalVAT);
+    printf("Grand Total: %.2f\n", grandTotal);
 
     return 0;
 }
